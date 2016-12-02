@@ -8,5 +8,16 @@ namespace LemonadeStand
 {
     class Money
     {
+        public double CurrentCash;
+        public double CurrentRevenue;
+        public double PricePerLemonade;
+ 
+        public Money()
+        {
+            CurrentCash = 20.00;
+         
+        }
+
+
     }
 }
