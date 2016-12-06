@@ -17,7 +17,11 @@ namespace LemonadeStand
             CurrentCash = 20.00;
          
         }
-
+        public double DisplayCurrentBalance()
+        {
+           
+            return CurrentCash;
+        }
 
     }
 }
