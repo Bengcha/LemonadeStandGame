@@ -13,6 +13,9 @@ namespace LemonadeStand
         public string weatherType;
         public double theWeather;
         Random ChooseWeather = new Random();
+        public Weather()
+        {
+        }
 
 
         public string WeatherForecast()
@@ -40,7 +43,7 @@ namespace LemonadeStand
                 weatherType = "Cold";
             }
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine(" The forecast weather today will be {0}", weatherType);
+            Console.WriteLine("The Weather today will be {0}", weatherType);
             Console.ResetColor();
             return weatherType;
         }
@@ -48,7 +51,7 @@ namespace LemonadeStand
         {
             temperature = ChooseWeather.Next(1, 110);
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("The temperature for today forecast will be {0}", temperature);
+            Console.WriteLine("The temperature for today will be {0} degree", temperature);
             Console.ResetColor();
             return temperature;
            

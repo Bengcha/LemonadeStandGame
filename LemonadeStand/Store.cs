@@ -19,20 +19,15 @@ namespace LemonadeStand
         public double PriceOfSugar;
         public double PriceOfIce;
 
+
         public Store()
         {
-        PriceOfWater = 0.15;
-        PriceOfLemon = 0.20;
-        PriceOfCup = 0.05;
-        PriceOfSugar = 0.10;
-        PriceOfIce = 0.05;
-    }
-        public void SellWater()
-        {
-            numberOfWater++;
-        }
-
-        
+            PriceOfWater = 0.15;
+            PriceOfLemon = 0.20;
+            PriceOfCup = 0.05;
+            PriceOfSugar = 0.10;
+            PriceOfIce = 0.05;
 
         }
     }
+}

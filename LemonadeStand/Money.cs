@@ -11,17 +11,22 @@ namespace LemonadeStand
         public double CurrentCash;
         public double CurrentRevenue;
         public double PricePerLemonade;
+
  
         public Money()
         {
             CurrentCash = 20.00;
          
         }
-        public double DisplayCurrentBalance()
+        public double LeftOverCash()
         {
-           
             return CurrentCash;
         }
-
+        public void displayCurrentBalance()
+        {
+            Console.WriteLine("Your current cash balance ${0} ", CurrentCash);
+        }
     }
 }
+
+

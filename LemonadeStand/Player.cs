@@ -45,9 +45,9 @@ namespace LemonadeStand
                 double item = Convert.ToDouble(Console.ReadLine());
                 if (money.CurrentCash > store.PriceOfWater * item)
                 {
-                    Console.WriteLine("You now have {0} water bottle \n", item);
                     money.CurrentCash = money.CurrentCash - (store.PriceOfWater * item);
                     inventory.currentWaterLeft += (store.numberOfWater * item);
+                    Console.WriteLine("You now have {0} water bottle in your inventory \n", inventory.currentWaterLeft);
                 }
                 else if (money.CurrentCash < store.PriceOfWater * item)
                 {
@@ -77,9 +77,9 @@ namespace LemonadeStand
                 double item = Convert.ToDouble(Console.ReadLine());
                 if (money.CurrentCash > store.PriceOfLemon * item)
                 {
-                    Console.WriteLine("You now have {0} of lemon \n", item);
                     money.CurrentCash = money.CurrentCash - (store.PriceOfLemon * item);
                     inventory.currentLemonLeft += (store.numberOfLemon * item);
+                    Console.WriteLine("You now have {0} lemon in your inventory \n", inventory.currentLemonLeft);
                 }
                 else if (money.CurrentCash < store.PriceOfLemon * item)
                 {
@@ -108,10 +108,10 @@ namespace LemonadeStand
                 double item = Convert.ToDouble(Console.ReadLine());
                 if (money.CurrentCash > store.PriceOfCup * item)
                 {
-                    Console.WriteLine("You now have {0} of cup \n", item);
                     money.CurrentCash = money.CurrentCash - (store.PriceOfCup * item);
                     inventory.currentCupLeft += (store.numberOfCup * item);
-                    Console.WriteLine("Your balance is now : {0} \n", money.CurrentCash);
+                    Console.WriteLine("You now have {0} cups in your inventory \n", inventory.currentCupLeft);
+
 
                 }
                 else if (money.CurrentCash < store.PriceOfCup * item)
@@ -142,9 +142,9 @@ namespace LemonadeStand
 
                 if (money.CurrentCash > store.PriceOfIce * item)
                 {
-                    Console.WriteLine("You now have {0} of ice \n", item);
                     money.CurrentCash = money.CurrentCash - (store.PriceOfIce * item);
                     inventory.currentIceLeft += (store.numberOfIce * item);
+                    Console.WriteLine("You now have {0} ice cubes in your inventory \n", inventory.currentIceLeft);
                 }
                 else if (money.CurrentCash < store.PriceOfIce * item)
                 {
@@ -173,9 +173,11 @@ namespace LemonadeStand
                 double item = Convert.ToDouble(Console.ReadLine());
                 if (money.CurrentCash > store.PriceOfSugar * item)
                 {
-                    Console.WriteLine("You now have {0} bag of sugar \n", item);
+                   
                     money.CurrentCash = money.CurrentCash - (store.PriceOfSugar * item);
                     inventory.currentSugarLeft += (store.numberOfSugar * item);
+                    Console.WriteLine("You now have {0} bags of sugar in your inventory \n", inventory.currentSugarLeft);
+
                 }
                 else if (money.CurrentCash < store.PriceOfSugar * item)
                 {
@@ -197,22 +199,48 @@ namespace LemonadeStand
 
 
         public void MakingLemonade()
+
         {
-            Console.WriteLine("Type 'make' to make lemonade \n");
+            inventory.CurrentSupplies();
+            money.displayCurrentBalance();
+            Console.WriteLine("\nType ---' Make '--- to make yummy lemonade \n");
             string make = Console.ReadLine().ToLower();
             if (make == "make")
             {
-                if (inventory.currentWaterLeft < 1 || inventory.currentLemonLeft < 4 || inventory.currentSugarLeft < 2 || inventory.currentIceLeft < 8 || inventory.currentCupLeft < 5)
+                if (inventory.currentWaterLeft >= 1 && inventory.currentLemonLeft >= 4 && inventory.currentSugarLeft >= 2 && inventory.currentIceLeft >= 8 && inventory.currentCupLeft >= 10)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("~~Lemonade Making In Progress~~");
+                    Console.ResetColor();
+                    Console.WriteLine("press enter to see freshly made lemonade! \n");
+                    Console.ReadLine();
+                    inventory.currentWaterLeft = inventory.currentWaterLeft - 1;
+                    inventory.currentLemonLeft = inventory.currentLemonLeft - 4;
+                    inventory.currentSugarLeft = inventory.currentSugarLeft - 2;
+                    inventory.currentIceLeft = inventory.currentIceLeft - 8;
+                    inventory.currentCupLeft = inventory.currentCupLeft - 10;
+                    inventory.numberOfFullLemonadeCup = inventory.numberOfFullLemonadeCup + 10;
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("You successfully made 1 pitcher of lemonade");
+                    Console.ResetColor(); 
+                    Console.WriteLine("You now have {0} lemonade fill cup \n", inventory.numberOfFullLemonadeCup);
+                    inventory.CurrentSupplies();
+                    MakeMorePitcher();
+                }
+                else if (inventory.currentWaterLeft < 1 || inventory.currentLemonLeft < 4 || inventory.currentSugarLeft < 2 || inventory.currentIceLeft < 8 || inventory.currentCupLeft < 5)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Sorry you don't have enough supplies to make a pitcher \n");
+                    Console.WriteLine("Shopping Time");
+                    money.displayCurrentBalance();
                     Console.ResetColor();
                     inventory.CurrentSupplies();
                     bool more = true;
                     while (more)
-                    { 
-                    Console.WriteLine("Type in the supply you want to buy or type done to finish: Water, Lemon, Sugar, Ice, Cup, 'Done'");
-                    string buymore = Console.ReadLine().ToLower();
+                    {
+                        
+                        Console.WriteLine("Choose a options \nBuy: (Water, Lemon, Sugar, Ice, Cup) \nDone = Ready to make more Lemonade \nQuit = End Game");
+                        string buymore = Console.ReadLine().ToLower();
                         switch (buymore)
                         {
                             case "water":
@@ -237,6 +265,12 @@ namespace LemonadeStand
                                 break;
                             case "done":
                                 more = false;
+                                MakingLemonade();
+                                break;
+                            case "quit":
+                                Console.WriteLine("Thanks for playing, Goodbye!");
+                                Console.ReadLine();
+                                Environment.Exit(0);
                                 break;
                             default:
                                 more = true;
@@ -244,48 +278,39 @@ namespace LemonadeStand
                         }
                     }
                 }
-                else
-                {
-                    inventory.currentWaterLeft = inventory.currentWaterLeft - 1;
-                    inventory.currentLemonLeft = inventory.currentLemonLeft - 4;
-                    inventory.currentSugarLeft = inventory.currentSugarLeft - 2;
-                    inventory.currentIceLeft = inventory.currentIceLeft - 8;
-                    inventory.currentCupLeft = inventory.currentCupLeft - 5;
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("You successfully made 1 pitcher of lemonade");
-                    Console.ResetColor();
-                    inventory.numberOfFullLemonadeCup = inventory.numberOfFullLemonadeCup + 10;
-                    Console.WriteLine("You now have {0} lemonade fill cup \n", inventory.numberOfFullLemonadeCup);
-
-
-                }
-
             }
-        }
-        public void MakeMoreLemonade()
-        {
-
-            bool morePitcher = true;
-            while (morePitcher)
+            else
             {
-                Console.WriteLine("Do you wish to make more Pitcher? Yes | No");
+                Console.WriteLine("{0} you need to make some lemonade before proceed on ", name);
+                MakingLemonade();
+            }
+
+
+
+        }
+        public void MakeMorePitcher()
+        {
+                Console.WriteLine("Do you wish to make more Pitcher? Yes | No \n");
                 string MakeMore = Console.ReadLine().ToLower();
                 if (MakeMore == "yes")
                 {
                     MakingLemonade();
-                    morePitcher = true;
 
+                }
+                else if (MakeMore == "no")
+                {
+                    Console.WriteLine("Great Good luck on your sales! \n");
                 }
                 else
-                {
-                    morePitcher = false;
-                    Console.WriteLine("Great Good luck on your sales!");
-
-                }
+            {
+                Console.WriteLine("You enter a invalid choices");
+                MakeMorePitcher();
+            }
             }
         }
     }
-}
+
+    
 
 
 
