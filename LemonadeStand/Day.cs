@@ -9,51 +9,75 @@ namespace LemonadeStand
     class Day
     {
         Inventory inventory;
-        public double numberOfCustomer;
-        Weather weather;
+        Money money;
+
+        Store store;
         public double firstDay;
-        public double sevenDay;
+        public double lastDay;
+        public double numberOfCustomer;
 
 
         public Day()
         {
-            firstDay = 0;
-            sevenDay = 7;
             inventory = new Inventory();
-            weather = new Weather();
-            numberOfCustomer = 0;
+            money = new Money();
+
+            store = new Store();
+            firstDay = 0;
+            lastDay = 7;
+
 
         }
 
         public double days()
         {
             firstDay += 1;
-            return firstDay;   
+            return firstDay;
         }
 
-        public double CustomerPerDay(double numberOfCustomerPerWeather)
-        {
-            if (weather.theWeather == 1)
+        public double CustomerPerDay(Weather weather, Player player, Money money, Inventory inventory)
+        { 
+            Random theCustomer = new Random();
+            numberOfCustomer = theCustomer.Next(1, 50);
+        
+            if (weather.theWeather == 1 && weather.temperature <= 30 && money.PricePerLemonade <= 0.25 && inventory.numberOfFullLemonadeCup > 0)
             {
-                numberOfCustomer = 5;
+                inventory.numberOfFullLemonadeCup = inventory.numberOfFullLemonadeCup -= numberOfCustomer;
             }
-            else if (weather.theWeather == 2)
+            else if (weather.theWeather == 1 && weather.temperature > 30 && money.PricePerLemonade <= 0.20 && inventory.numberOfFullLemonadeCup > 0)
             {
-                numberOfCustomer = 10;
+
+                inventory.numberOfFullLemonadeCup = inventory.numberOfFullLemonadeCup -= numberOfCustomer;
             }
-            else if (weather.theWeather == 3)
+
+            else if (weather.theWeather == 2 && weather.temperature <= 80 && money.PricePerLemonade <= 0.50 && inventory.numberOfFullLemonadeCup > 0)
             {
-                numberOfCustomer = 6;
+
+                inventory.numberOfFullLemonadeCup = inventory.numberOfFullLemonadeCup -= numberOfCustomer;
             }
-            else if (weather.theWeather == 4)
+            else if (weather.theWeather == 2 && weather.temperature > 80 && money.PricePerLemonade <= 0.75 && inventory.numberOfFullLemonadeCup > 0)
             {
-                numberOfCustomer = 7;
+
+                inventory.numberOfFullLemonadeCup = inventory.numberOfFullLemonadeCup -= numberOfCustomer;
             }
-            else if (weather.theWeather == 5)
+
+            else if (weather.theWeather == 3 && weather.temperature <= 15 && money.PricePerLemonade <= 0.15 && inventory.numberOfFullLemonadeCup > 0)
             {
-                numberOfCustomer = 2;
+                inventory.numberOfFullLemonadeCup = inventory.numberOfFullLemonadeCup -= numberOfCustomer;
+
             }
+            else if (weather.theWeather == 3 && weather.temperature > 15 && money.PricePerLemonade <= 0.20 && inventory.numberOfFullLemonadeCup > 0)
+            {
+                inventory.numberOfFullLemonadeCup = inventory.numberOfFullLemonadeCup -= numberOfCustomer;
+
+            }
+
+            Console.WriteLine("Today there are {0} customers and your amount of lemonade sold was : {1}", numberOfCustomer, inventory.numberOfFullLemonadeCup);
+            money.CurrentRevenue = money.PricePerLemonade - (store.PriceOfWater + store.PriceOfLemon + store.PriceOfLemon + store.PriceOfIce + store.PriceOfCup);
+            Console.WriteLine("Your total revenue today is : ${0}", money.CurrentRevenue);
+            Console.ReadLine();
             return numberOfCustomer;
+
         }
 
 

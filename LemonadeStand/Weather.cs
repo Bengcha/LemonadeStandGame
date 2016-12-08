@@ -18,43 +18,40 @@ namespace LemonadeStand
         }
 
 
-        public string WeatherForecast()
+        public string randomWeatherWithTemperature()
         {
-            theWeather = ChooseWeather.Next(1, 6);
+            theWeather = ChooseWeather.Next(1, 4);
 
-            if ( theWeather == 1)
+            if (theWeather == 1)
             {
                 weatherType = "Rainy";
+                temperature = ChooseWeather.Next(20, 50);
+                DisplayWeatherAndTemperature();
+                Console.WriteLine("Rain, rain go away! Raining day can cause a great impact on your sales so becareful and don't over make your lemonade. \n");       
             }
-            else if (theWeather  == 2)
+            else if (theWeather == 2)
             {
                 weatherType = "Sunny";
+                temperature = ChooseWeather.Next(70, 110);
+                DisplayWeatherAndTemperature();
+                Console.WriteLine("HOT HOT!, Hot day is the perfect day to sell lemonade. Make sure to make plenty of lemonade but be careful of your pricing.\n");
             }
-            else if ( theWeather == 3)
-            {
-                weatherType = "cloudy";
-            }
-            else if ( theWeather == 4)
-            {
-                weatherType = "Windy";
-            }
-            else if ( theWeather == 5)
+ 
+            else if (theWeather == 3)
             {
                 weatherType = "Cold";
+                temperature = ChooseWeather.Next(1, 30);
+                DisplayWeatherAndTemperature();
+                Console.WriteLine("AaaaaChoo! Wow its almost freezing outside! It's the worst day to sell your lemonade but maybe you will have a chance if your adjust your pricing right.\n");
             }
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("The Weather today will be {0}", weatherType);
-            Console.ResetColor();
-            return weatherType;
+            return weatherType + temperature;
         }
-        public double RndTemperature()
-        {
-            temperature = ChooseWeather.Next(1, 110);
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("The temperature for today will be {0} degree", temperature);
+        public void DisplayWeatherAndTemperature()
+        { 
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("The Weather today will be {0}, and the temperature will be {1} degree", weatherType, temperature);
             Console.ResetColor();
-            return temperature;
-           
+            
         }
     }
 }

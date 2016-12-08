@@ -6,26 +6,9 @@ using System.Threading.Tasks;
 
 namespace LemonadeStand
 {
-    class Customer
+    interface iMixable
     {
-
-
-
-        }
+        void mixSupply();
+     
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}

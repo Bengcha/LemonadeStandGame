@@ -6,26 +6,7 @@ using System.Threading.Tasks;
 
 namespace LemonadeStand
 {
-    class Customer
+    public class Lemon
     {
-
-
-
-        }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}

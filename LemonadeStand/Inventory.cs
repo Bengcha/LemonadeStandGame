@@ -6,35 +6,41 @@ using System.Threading.Tasks;
 
 namespace LemonadeStand
 {
-    public class Inventory 
+    public class Inventory : Store
     {
-        public double currentWaterLeft;
-        public double currentLemonLeft;
-        public double currentIceLeft;
-        public double currentCupLeft;
-        public double currentSugarLeft; 
+        public double water;
+        public double lemon;
+        public double ice;
+        public double cup;
+        public double sugar; 
         public double numberOfFullLemonadeCup;
         public double numberOfLemonadeSold;
 
         public Inventory()
         {
-            currentCupLeft = 0;
-            currentIceLeft = 0;
-            currentLemonLeft = 0;
-            currentSugarLeft = 0;
-            currentWaterLeft = 0;
-            numberOfFullLemonadeCup = 0;
-            numberOfLemonadeSold = 0;
-        
-
+            cup = 0;
         }
-        public void CurrentSupplies()
+     
+
+        public double NumberOfCupOwn()
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Your current supplies are {0} bottles of water, {1} Lemon, {2} ice cube, {3} cups, {4} bag of sugar \n", currentWaterLeft, currentLemonLeft, currentIceLeft, currentCupLeft, currentSugarLeft);
-            Console.ResetColor();
+            return cup;
         }
 
+
+
+        public void DisplayCurrentSupplies()
+        {
+            
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\nYour current supplies are {0} bottles of water, {1} Lemon, {2} ice cube, {3} cups, {4} bag of sugar \n", water, lemon, ice, cup, sugar);
+            Console.ResetColor();
+        
+        }
+        public double FullLemonadeCupMade()
+        {
+            return numberOfFullLemonadeCup;
+        }
 
         }
         }

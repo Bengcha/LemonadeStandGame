@@ -16,6 +16,8 @@ namespace LemonadeStand
         public Money()
         {
             CurrentCash = 20.00;
+            PricePerLemonade = 0;
+            CurrentRevenue = 0;
          
         }
         public double LeftOverCash()
@@ -24,7 +26,10 @@ namespace LemonadeStand
         }
         public void displayCurrentBalance()
         {
-            Console.WriteLine("Your current cash balance ${0} ", CurrentCash);
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("Your current cash balance: ${0} ", CurrentCash);
+            Console.ResetColor();
+
         }
     }
 }

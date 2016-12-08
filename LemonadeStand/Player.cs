@@ -6,19 +6,24 @@ using System.Threading.Tasks;
 
 namespace LemonadeStand
 {
-    class Player
+    public class Player
 
     {
         public string name;
         Money money;
         Store store;
         Inventory inventory;
+        Recipe recipe;
+        public double numberOfItem;
+     
 
         public Player()
         {
             money = new Money();
             store = new Store();
             inventory = new Inventory();
+            recipe = new Recipe();
+           
         }
 
 
@@ -42,14 +47,15 @@ namespace LemonadeStand
             Console.ResetColor();
             try
             {
-                double item = Convert.ToDouble(Console.ReadLine());
-                if (money.CurrentCash > store.PriceOfWater * item)
+                double numberOfItem = Convert.ToDouble(Console.ReadLine());
+                if (money.CurrentCash > store.PriceOfWater * numberOfItem)
                 {
-                    money.CurrentCash = money.CurrentCash - (store.PriceOfWater * item);
-                    inventory.currentWaterLeft += (store.numberOfWater * item);
-                    Console.WriteLine("You now have {0} water bottle in your inventory \n", inventory.currentWaterLeft);
+                    money.CurrentCash = money.CurrentCash - (store.PriceOfWater * numberOfItem);
+                    inventory.water += (store.numberOfWater * numberOfItem);
+                    inventory.DisplayCurrentSupplies();
+                    money.displayCurrentBalance();
                 }
-                else if (money.CurrentCash < store.PriceOfWater * item)
+                else if (money.CurrentCash < store.PriceOfWater * numberOfItem)
                 {
                     Console.WriteLine("Sorry {0} you don't have enough cash to buy that amount\n", name);
                     BuyingWater();
@@ -78,8 +84,9 @@ namespace LemonadeStand
                 if (money.CurrentCash > store.PriceOfLemon * item)
                 {
                     money.CurrentCash = money.CurrentCash - (store.PriceOfLemon * item);
-                    inventory.currentLemonLeft += (store.numberOfLemon * item);
-                    Console.WriteLine("You now have {0} lemon in your inventory \n", inventory.currentLemonLeft);
+                    inventory.lemon += (store.numberOfLemon * item);
+                    inventory.DisplayCurrentSupplies();
+                    money.displayCurrentBalance();
                 }
                 else if (money.CurrentCash < store.PriceOfLemon * item)
                 {
@@ -109,8 +116,11 @@ namespace LemonadeStand
                 if (money.CurrentCash > store.PriceOfCup * item)
                 {
                     money.CurrentCash = money.CurrentCash - (store.PriceOfCup * item);
-                    inventory.currentCupLeft += (store.numberOfCup * item);
-                    Console.WriteLine("You now have {0} cups in your inventory \n", inventory.currentCupLeft);
+                    inventory.cup += (store.numberOfCup * item);
+                    inventory.DisplayCurrentSupplies();
+                    money.displayCurrentBalance();
+                    return inventory.cup;
+                   
 
 
                 }
@@ -143,8 +153,9 @@ namespace LemonadeStand
                 if (money.CurrentCash > store.PriceOfIce * item)
                 {
                     money.CurrentCash = money.CurrentCash - (store.PriceOfIce * item);
-                    inventory.currentIceLeft += (store.numberOfIce * item);
-                    Console.WriteLine("You now have {0} ice cubes in your inventory \n", inventory.currentIceLeft);
+                    inventory.ice += (store.numberOfIce * item);
+                    inventory.DisplayCurrentSupplies();
+                    money.displayCurrentBalance();
                 }
                 else if (money.CurrentCash < store.PriceOfIce * item)
                 {
@@ -175,14 +186,18 @@ namespace LemonadeStand
                 {
                    
                     money.CurrentCash = money.CurrentCash - (store.PriceOfSugar * item);
-                    inventory.currentSugarLeft += (store.numberOfSugar * item);
-                    Console.WriteLine("You now have {0} bags of sugar in your inventory \n", inventory.currentSugarLeft);
+                    inventory.sugar += (store.numberOfSugar * item);
+                    inventory.DisplayCurrentSupplies();
+                    money.displayCurrentBalance();
+
+
 
                 }
                 else if (money.CurrentCash < store.PriceOfSugar * item)
                 {
                     Console.WriteLine("Sorry {0} you don't have enough cash to buy that amount", name);
                     BuyingSugar();
+                    
                 }
             }
             catch (Exception e)
@@ -198,115 +213,9 @@ namespace LemonadeStand
         }
 
 
-        public void MakingLemonade()
-
-        {
-            inventory.CurrentSupplies();
-            money.displayCurrentBalance();
-            Console.WriteLine("\nType ---' Make '--- to make yummy lemonade \n");
-            string make = Console.ReadLine().ToLower();
-            if (make == "make")
-            {
-                if (inventory.currentWaterLeft >= 1 && inventory.currentLemonLeft >= 4 && inventory.currentSugarLeft >= 2 && inventory.currentIceLeft >= 8 && inventory.currentCupLeft >= 10)
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("~~Lemonade Making In Progress~~");
-                    Console.ResetColor();
-                    Console.WriteLine("press enter to see freshly made lemonade! \n");
-                    Console.ReadLine();
-                    inventory.currentWaterLeft = inventory.currentWaterLeft - 1;
-                    inventory.currentLemonLeft = inventory.currentLemonLeft - 4;
-                    inventory.currentSugarLeft = inventory.currentSugarLeft - 2;
-                    inventory.currentIceLeft = inventory.currentIceLeft - 8;
-                    inventory.currentCupLeft = inventory.currentCupLeft - 10;
-                    inventory.numberOfFullLemonadeCup = inventory.numberOfFullLemonadeCup + 10;
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("You successfully made 1 pitcher of lemonade");
-                    Console.ResetColor(); 
-                    Console.WriteLine("You now have {0} lemonade fill cup \n", inventory.numberOfFullLemonadeCup);
-                    inventory.CurrentSupplies();
-                    MakeMorePitcher();
-                }
-                else if (inventory.currentWaterLeft < 1 || inventory.currentLemonLeft < 4 || inventory.currentSugarLeft < 2 || inventory.currentIceLeft < 8 || inventory.currentCupLeft < 5)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Sorry you don't have enough supplies to make a pitcher \n");
-                    Console.WriteLine("Shopping Time");
-                    money.displayCurrentBalance();
-                    Console.ResetColor();
-                    inventory.CurrentSupplies();
-                    bool more = true;
-                    while (more)
-                    {
-                        
-                        Console.WriteLine("Choose a options \nBuy: (Water, Lemon, Sugar, Ice, Cup) \nDone = Ready to make more Lemonade \nQuit = End Game");
-                        string buymore = Console.ReadLine().ToLower();
-                        switch (buymore)
-                        {
-                            case "water":
-                                more = true;
-                                BuyingWater();
-                                break;
-                            case "lemon":
-                                more = true;
-                                BuyingLemon();
-                                break;
-                            case "sugar":
-                                more = true;
-                                BuyingSugar();
-                                break;
-                            case "ice":
-                                more = true;
-                                BuyingIce();
-                                break;
-                            case "cup":
-                                more = true;
-                                BuyingCup();
-                                break;
-                            case "done":
-                                more = false;
-                                MakingLemonade();
-                                break;
-                            case "quit":
-                                Console.WriteLine("Thanks for playing, Goodbye!");
-                                Console.ReadLine();
-                                Environment.Exit(0);
-                                break;
-                            default:
-                                more = true;
-                                break;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine("{0} you need to make some lemonade before proceed on ", name);
-                MakingLemonade();
-            }
-
-
-
-        }
-        public void MakeMorePitcher()
-        {
-                Console.WriteLine("Do you wish to make more Pitcher? Yes | No \n");
-                string MakeMore = Console.ReadLine().ToLower();
-                if (MakeMore == "yes")
-                {
-                    MakingLemonade();
-
-                }
-                else if (MakeMore == "no")
-                {
-                    Console.WriteLine("Great Good luck on your sales! \n");
-                }
-                else
-            {
-                Console.WriteLine("You enter a invalid choices");
-                MakeMorePitcher();
-            }
-            }
+       
+  
+        
         }
     }
 

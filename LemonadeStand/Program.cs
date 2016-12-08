@@ -12,7 +12,7 @@ namespace LemonadeStand
         {
             Console.WindowWidth = 150;
             Game RunGame = new Game();
-            RunGame.StartGame();
+            RunGame.RunGame();
 
             Console.ReadKey();
         }
