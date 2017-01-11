@@ -6,251 +6,187 @@ using System.Threading.Tasks;
 
 namespace LemonadeStand
 {
-    public class Player
-
+    class Player
     {
-        public string name;
-        Money money;
-        Store store;
-        Inventory inventory;
-        Recipe recipe;
-        public double numberOfItem;
-     
+        string name;
+        public double cash;
+        public Dictionary<string, int> recipe;
+        public double price;
+        public double moneySpentToday;
+        public double moneyEarnedToday;
+        public double totalMoneySpent;
+        public double totalMoneyEarned;
 
         public Player()
         {
-            money = new Money();
-            store = new Store();
-            inventory = new Inventory();
-            recipe = new Recipe();
-           
+            cash = 50;
+            price = .1;
+            recipe = new Dictionary<string, int>();
+            recipe.Add("lemons", 1);
+            recipe.Add("sugar", 1);
+            recipe.Add("ice", 1);
+            recipe.Add("cups", 1);
+
+            moneyEarnedToday = moneySpentToday = totalMoneyEarned = totalMoneySpent = 0;
         }
-
-
-        public void ChooseName()
+        public string Name
         {
-            Console.WriteLine("What will your character name be? \n");
-            name = Console.ReadLine();
-            if (name.Equals(""))
+            get
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("You forgot to enter a Name for your character \n");
-                Console.ResetColor();
-                ChooseName();
+                return name;
             }
-
+            set
+            {
+                
+                name = value;
+               
+            }
         }
-        public double BuyingWater()
+        public double GetCash()
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("How many water bottle do you want to buy? \n");
+            return cash;
+        }
+        public void SetCash(double amount)
+        {
+            cash = amount;
+        }
+        public double GetTotalSpent()
+        {
+            return totalMoneySpent;
+        }
+        public double GetTotalProfit()
+        {
+            return totalMoneyEarned;
+        }
+        public void AdjustCash(double amount)
+        {
+            cash += amount;
+        }
+        public void AdjustMoneySpentToday(double amount)
+        {
+            moneySpentToday += amount;
+        }
+        public void AdjustTotalMoneySpent(double amount)
+        {
+            totalMoneySpent += amount;
+        }
+        public double GetPrice()
+        {
+            return price;
+        }
+        public void DisplayCash()
+        {
+            Console.WriteLine("Your cash balance: ${0}.", cash);
+        }
+        public void ResetMoneySpent()
+        {
+            moneySpentToday = 0;
+        }
+        public void SetTotalSpent(double amount)
+        {
+            totalMoneySpent = amount;
+        }
+        public void SetTotalProfit(int amount)
+        {
+            totalMoneyEarned = amount;
+        }
+        public double GetMoneySpentToday()
+        {
+            return moneySpentToday;
+        }
+        public void DisplayRecipe()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine("Your current Recipe: {0} Lemon, {1} Sugar cubes, {2} Ice Cube", recipe["lemons"], recipe["sugar"], recipe["ice"]);
             Console.ResetColor();
-            try
-            {
-                double numberOfItem = Convert.ToDouble(Console.ReadLine());
-                if (money.CurrentCash > store.PriceOfWater * numberOfItem)
-                {
-                    money.CurrentCash = money.CurrentCash - (store.PriceOfWater * numberOfItem);
-                    inventory.water += (store.numberOfWater * numberOfItem);
-                    inventory.DisplayCurrentSupplies();
-                    money.displayCurrentBalance();
-                }
-                else if (money.CurrentCash < store.PriceOfWater * numberOfItem)
-                {
-                    Console.WriteLine("Sorry {0} you don't have enough cash to buy that amount\n", name);
-                    BuyingWater();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("You enter a invalid amount");
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Please use Number ONLY!");
-                Console.ResetColor();
-                BuyingWater();
-            }
-
-            return money.CurrentCash;
         }
-
-        public double BuyingLemon()
+        public void GetChangeRecipe()
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("How many lemon do you want to buy? \n");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Do you wish to change your Recipe? Y|N");
             Console.ResetColor();
-            try
+            string change = Console.ReadLine().ToLower();
+            if (change == "y")
             {
-                double item = Convert.ToDouble(Console.ReadLine());
-                if (money.CurrentCash > store.PriceOfLemon * item)
-                {
-                    money.CurrentCash = money.CurrentCash - (store.PriceOfLemon * item);
-                    inventory.lemon += (store.numberOfLemon * item);
-                    inventory.DisplayCurrentSupplies();
-                    money.displayCurrentBalance();
-                }
-                else if (money.CurrentCash < store.PriceOfLemon * item)
-                {
-                    Console.WriteLine("Sorry {0} you don't have enough cash to buy that amount", name);
-                    BuyingLemon();
-                }
+                ChangeRecipe();
             }
-            catch (Exception e)
+            else if (change =="n")
             {
-                Console.WriteLine("You enter a invalid amount");
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Please use Number ONLY!");
-                Console.ResetColor();
-                BuyingLemon();
+                Console.WriteLine("No change to Recipe");
             }
-            return money.CurrentCash;
+            else
+            {
+                Console.WriteLine("Please choose a valid answer");
+                GetChangeRecipe();
+            }
         }
-
-        public double BuyingCup()
+        public void ChangeRecipe()
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("How many cup do you want to buy? \n");
-            Console.ResetColor();
-            try
-            {
-                double item = Convert.ToDouble(Console.ReadLine());
-                if (money.CurrentCash > store.PriceOfCup * item)
-                {
-                    money.CurrentCash = money.CurrentCash - (store.PriceOfCup * item);
-                    inventory.cup += (store.numberOfCup * item);
-                    inventory.DisplayCurrentSupplies();
-                    money.displayCurrentBalance();
-                    return inventory.cup;
-                   
-
-
-                }
-                else if (money.CurrentCash < store.PriceOfCup * item)
-                {
-                    Console.WriteLine("Sorry {0} you don't have enough cash to buy that amount", name);
-                    BuyingCup();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("You enter a invalid amount");
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Please use Number ONLY!");
-                Console.ResetColor();
-                BuyingCup();
-            }
-            return money.CurrentCash;
+            ChangeItem("lemons");
+            ChangeItem("sugar");
+            ChangeItem("ice");
         }
-
-        public double BuyingIce()
+        public void adjustTotalMoneySpent(double moneySpentToday)
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("How many ice cubes do you want to buy? \n");
-            Console.ResetColor();
-            try
-            {
-                double item = Convert.ToDouble(Console.ReadLine());
-
-                if (money.CurrentCash > store.PriceOfIce * item)
-                {
-                    money.CurrentCash = money.CurrentCash - (store.PriceOfIce * item);
-                    inventory.ice += (store.numberOfIce * item);
-                    inventory.DisplayCurrentSupplies();
-                    money.displayCurrentBalance();
-                }
-                else if (money.CurrentCash < store.PriceOfIce * item)
-                {
-                    Console.WriteLine("Sorry {0} you don't have enough cash to buy that amount", name);
-                    BuyingIce();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("You enter a invalid amount");
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Please use Number ONLY!");
-                Console.ResetColor();
-                BuyingIce();
-            }
-            return money.CurrentCash;
+            totalMoneySpent += moneySpentToday;
         }
-
-        public double BuyingSugar()
+        public void ChangeItem(string item)
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("How many bags of sugar do you want to buy? \n");
-            Console.ResetColor();
-            try
+            int converted;
+            Console.WriteLine("How many {0} do you want to add to the pitcher recipe?", item);
+            string howMany = Console.ReadLine();
+            bool result = Int32.TryParse(howMany, out converted);
+            if (result)
             {
-                double item = Convert.ToDouble(Console.ReadLine());
-                if (money.CurrentCash > store.PriceOfSugar * item)
+                if (converted >= 0)
                 {
-                   
-                    money.CurrentCash = money.CurrentCash - (store.PriceOfSugar * item);
-                    inventory.sugar += (store.numberOfSugar * item);
-                    inventory.DisplayCurrentSupplies();
-                    money.displayCurrentBalance();
-
-
-
+                    recipe[item] = converted;
+                    Console.WriteLine("Your pitcher recipe now contain {0} {1}", converted, item);
                 }
-                else if (money.CurrentCash < store.PriceOfSugar * item)
+                else
                 {
-                    Console.WriteLine("Sorry {0} you don't have enough cash to buy that amount", name);
-                    BuyingSugar();
-                    
+                    Console.WriteLine("Please enter 0 or a positive number.");
+                    ChangeItem(item);
                 }
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine("You enter a invalid amount");
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Please use Number ONLY!");
-                Console.ResetColor();
-                BuyingSugar();
+                Console.WriteLine("Please enter 0 or a positive number.");
+                ChangeItem(item);
             }
-            return money.CurrentCash;
-
+        }
+        public void DisplayPrice()
+        {
+            Console.WriteLine("You currently charge ${0} for a cup of lemonade.", price);
         }
 
+        public void GetChangePrice()
+        {
+            double converted;
+            Console.WriteLine("Enter your new price.");
+            string newPrice = Console.ReadLine();
+            bool result = Double.TryParse(newPrice, out converted);
 
-       
-  
-        
+            if (result)
+            {
+                if (converted > 0)
+                {
+                    Console.WriteLine("You now charge ${0} for a cup of lemonade.", converted);
+                    price = converted;
+                }
+                else
+                {
+                    Console.WriteLine("Please enter a number higher than 0.");
+                    GetChangePrice();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Please enter a number higher than 0.");
+                GetChangePrice();
+            }
         }
+
     }
 
-    
-
-
-
-
-
-                
-    //public void SetLemonadePrice()
-    //{
-    //    Inventory supply = new Inventory();
-    //    Money price = new Money();
-    //    if (supply.numberOfFullLemonadeCup > 0)
-    //    {
-    //        Console.WriteLine("Enter the amount per Lemonade cup: \n");
-    //        price.PricePerLemonade = Convert.ToDouble(Console.ReadLine());
-    //        setPrice = true;
-
-    //    }
-    //    else if (supply.numberOfFullLemonadeCup == 0)
-    //    {
-    //        Console.WriteLine("You don't have any Lemonade to sell");
-    //        Console.WriteLine("Game Over \n");
-    //        Console.ReadLine();
-    //        setPrice = false;
-
-
-
-
-
-
-
-
-
-
-
+}

@@ -3,55 +3,69 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace LemonadeStand
 {
     class Weather
     {
-
-        public double temperature;
-        public string weatherType;
-        public double theWeather;
-        Random ChooseWeather = new Random();
-        public Weather()
+        int temperature;
+        int cloudiness;
+        int rainLevel;
+        Random weatherRandom = new Random();
+        public void RandomForecast()
         {
+            //Thread.Sleep(15);
+            temperature = 60 + weatherRandom.Next(0, 16) + weatherRandom.Next(0, 16) + weatherRandom.Next(0, 16);
+            Thread.Sleep(15);
+            cloudiness = weatherRandom.Next(0, 101);
+            //Thread.Sleep(15);
+            int rainChance = weatherRandom.Next(1, 101);
+            if (rainChance < 50)
+            {
+                rainLevel = 0;
+            }
+            else
+            {
+                //Thread.Sleep(15);
+                rainLevel = weatherRandom.Next(0, 101);
+            }
         }
-
-
-        public string randomWeatherWithTemperature()
+        public void DisplayTodaysWeather(List<Weather> weatherForecast)
         {
-            theWeather = ChooseWeather.Next(1, 4);
-
-            if (theWeather == 1)
-            {
-                weatherType = "Rainy";
-                temperature = ChooseWeather.Next(20, 50);
-                DisplayWeatherAndTemperature();
-                Console.WriteLine("Rain, rain go away! Raining day can cause a great impact on your sales so becareful and don't over make your lemonade. \n");       
-            }
-            else if (theWeather == 2)
-            {
-                weatherType = "Sunny";
-                temperature = ChooseWeather.Next(70, 110);
-                DisplayWeatherAndTemperature();
-                Console.WriteLine("HOT HOT!, Hot day is the perfect day to sell lemonade. Make sure to make plenty of lemonade but be careful of your pricing.\n");
-            }
- 
-            else if (theWeather == 3)
-            {
-                weatherType = "Cold";
-                temperature = ChooseWeather.Next(1, 30);
-                DisplayWeatherAndTemperature();
-                Console.WriteLine("AaaaaChoo! Wow its almost freezing outside! It's the worst day to sell your lemonade but maybe you will have a chance if your adjust your pricing right.\n");
-            }
-            return weatherType + temperature;
-        }
-        public void DisplayWeatherAndTemperature()
-        { 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("The Weather today will be {0}, and the temperature will be {1} degree", weatherType, temperature);
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("\nToday Weather Forecast");
             Console.ResetColor();
-            
+            DisplayWeather(weatherForecast[0]);
+        }
+        //public void WeatherReport(List<Weather> weatherForecast)
+        //{
+        //    for (int i = 0; i < 7; i++)
+        //    {
+        //        Console.WriteLine("\nDay {0}'s weather:", i + 1);
+        //        DisplayWeather(weatherForecast[i]);
+        //    }
+
+
+        //}
+        public void DisplayWeather(Weather weather)
+        {
+            Console.WriteLine("Temperature: {0}° degree", weather.GetTemperature());
+            Console.WriteLine("Cloudy: {0}%", weather.GetCloudiness());
+            Console.WriteLine("Chance of Rain: {0}%", weather.GetRain());
+        }
+
+        public int GetTemperature()
+        {
+            return temperature;
+        }
+        public int GetCloudiness()
+        {
+            return cloudiness;
+        }
+        public int GetRain()
+        {
+            return rainLevel;
         }
     }
 }

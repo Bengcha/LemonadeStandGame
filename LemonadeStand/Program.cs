@@ -10,11 +10,8 @@ namespace LemonadeStand
     {
         static void Main(string[] args)
         {
-            Console.WindowWidth = 150;
-            Game RunGame = new Game();
-            RunGame.RunGame();
-
-            Console.ReadKey();
+            Game game = new Game();
+            game.StartGame();
         }
     }
 }

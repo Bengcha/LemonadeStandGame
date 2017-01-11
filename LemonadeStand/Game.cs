@@ -3,45 +3,52 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace LemonadeStand
 {
     class Game
     {
-        Player player;
-        Weather weather;
+        int numberOfDays;
+        int currentDay;
+        List<Customer> customers;
+        List<Weather> weatherForecast;
         Inventory inventory;
+        Store store;
+        Player player;
         Day day;
-        Customer customer;
-        Money money;
-        Recipe recipe;
-        Mission mission;
+        Weather weather;
+        bool mainMenu;
 
         public Game()
         {
-            player = new Player();
-            weather = new Weather();
+            currentDay = 1;
+            customers = new List<Customer>();
+            weatherForecast = new List<Weather>();
             inventory = new Inventory();
+            store = new Store();
+            player = new Player();
             day = new Day();
-            customer = new Customer();
-            money = new Money();
-            recipe = new Recipe();
-            mission = new Mission();
+            weather = new Weather();
+            mainMenu = true;
         }
 
-        public void RunGame()
+        public void StartGame()
         {
-            DisplayWelcome();
+            DisplayWelcomeMessage();
             DisplayPlayOption();
             DisplayGameTitle();
-            DisplayMission();
-            player.ChooseName();
-            StartGame();
+            RuleOptions();
+            ChooseName();
+            GetDays();
+            SetWeather();
+            PlayerMenu();
+            EndGame();
         }
 
-        public void DisplayWelcome()
+        public void DisplayWelcomeMessage()
         {
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Welcome to the Lemonade Stand Game \n");
             Console.ResetColor();
         }
@@ -83,212 +90,188 @@ namespace LemonadeStand
             Console.ResetColor();
         }
 
-        public void DisplayMission()
+        public void RuleOptions()
         {
+            DisplayGameTitle();
             Console.WriteLine("\nWould you like to see the Mission statment? Yes | No \n");
             string choice = Console.ReadLine().ToLower();
             switch (choice)
             {
                 case "yes":
-                    mission.goalStatment();
+                    DisplayRule();
                     break;
                 case "no":
                     Console.WriteLine("\nOkay lets move forward. \n");
                     break;
                 default:
                     Console.WriteLine("Please answer yes or no.");
-                    DisplayMission();
+                    Console.ReadKey();
+                    Console.Clear();
+                    RuleOptions();
                     break;
+            }
+        }
+        public void DisplayRule()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine("\nYou are given $50.00 to start a Lemonade Business. You can choose the amount of days");
+            Console.WriteLine("you want to play for. You can start buying supplies with the amount of cash you have.");
+            Console.WriteLine("The supplies are lemon, ice, cup, and sugar. You have the options ");
+            Console.WriteLine("to choose the amount of supplies you want to buy each day. The weathers ");
+            Console.WriteLine("conidition will greatly impact your sales and profit. To win the game you must");
+            Console.WriteLine("make profit, meaning your *Final $ Balance* should be greater than your starting balance.");
+            Console.ResetColor();
+            Console.WriteLine("\npress enter to continue...");
+            Console.ReadLine();
+        }
+
+        public void ChooseName()
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("What will your character name be?");
+            Console.ResetColor();
+            player.Name = Console.ReadLine().ToUpper();
+            if (player.Name.Equals(""))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("You forgot to enter a Name for your character \n");
+                Console.ResetColor();
+                ChooseName();
+            }
+        }
+
+        public void SetCurrentDay(int day)
+        {
+            currentDay = day;
+        }
+
+        public void GetDays()
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("\nHello {0}! please enter the amount of days you wish to play \n", player.Name);
+            Console.ResetColor();
+            string playerDays = Console.ReadLine().ToUpper();
+            int converted;
+            bool result = Int32.TryParse(playerDays, out converted);
+            if (result)
+            {
+                if (converted > 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    numberOfDays = converted;
+                    Console.WriteLine("\nGreat! You are set to play for {0} days.", converted);
+                    Console.ResetColor();
+                    Console.WriteLine("\npress enter to continue...");
+                    Console.ReadLine();
+                }
+                else
+                {
+                    Console.WriteLine("Please enter number only.");
+                    GetDays();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Please enter number only.");
+                GetDays();
+            }
+        }
+        public void SetWeather()
+        {
+            int weatherDays = numberOfDays + 7;
+            for (int i = 0; i < weatherDays; i++)
+            {
+                Weather weather = new Weather();
+                weather.RandomForecast();
+                weatherForecast.Add(weather);
             }
         }
 
         public void PlayerMenu()
         {
-
-            bool MainMenu = true;
-            while (MainMenu)
+            while (mainMenu)
             {
-                Console.WriteLine("\n{0} what would you like to do?\n", player.name);
-                Console.WriteLine("[1] Start the Day        [2] Check Inventory  [3] Buy Supply\n[4] Check Cash Balance   [5] Check Recipe     [6] Quit  ");
-                string chooseMenu = Console.ReadLine().ToLower();
-                switch (chooseMenu)
+                DisplayGameTitle();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("\n*************** DAY {0} ***************", currentDay);
+                Console.ResetColor();
+                weather.DisplayTodaysWeather(weatherForecast);
+                Console.WriteLine("\n{0} what would you like to do?", player.Name);
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine("[1] Start Day [2] Inventory [3] Purchase Supply [4] Cash Balance \n[5] Recipe    [6] Set Price [7] Quit ");
+                string choice = Console.ReadLine().ToLower();
+                Console.ResetColor();
+                switch (choice)
                 {
                     case "1":
-                        MainMenu = false;
-                        MakingLemonade();
+                        Console.Clear();
+                        day.StartDay(inventory, player, this, weatherForecast[0]);
+                        day.EndDay(this, player, inventory);
+                        Console.ReadKey();
                         break;
                     case "2":
-                        MainMenu = true;
-                        inventory.DisplayCurrentSupplies();
+                        inventory.DisplayInventory();
+                        Console.ReadKey();
                         break;
                     case "3":
-                        MainMenu = true;
-                        BuySupply();
+                        store.Purchase(inventory.Storage, player, inventory);
+                        Console.ReadKey();
                         break;
                     case "4":
-                        MainMenu = true;
-                        money.displayCurrentBalance();
+                        player.DisplayCash();
+                        Console.ReadKey();
                         break;
                     case "5":
-                        MainMenu = true;
-                        recipe.supplyNeedToMakePitcher();
+                        player.DisplayRecipe();
+                        player.GetChangeRecipe();
+                        Console.ReadKey();
                         break;
                     case "6":
-                        MainMenu = false;
-                        Console.WriteLine("GAME OVER!");
-                        Console.ReadLine();
+                        player.DisplayPrice();
+                        player.GetChangePrice();
+                        Console.ReadKey();
+                        break;
+                    case "7":
+                        mainMenu = false;
+                        Console.WriteLine("You Ended the Game. Goodbye!");
+                        Console.ReadKey();
                         Environment.Exit(0);
                         break;
                     default:
-                        MainMenu = true;
+                        Console.WriteLine("Thats not a valid option, please choose between [1] - [7]");
+                        Console.WriteLine("press enter to continue...");
+                        Console.ReadLine();
+                        mainMenu = true;
                         break;
                 }
             }
         }
 
-        public void BuySupply()
+        public Customer MakeCustomer()
         {
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.WriteLine("\n****FoodMart Store****\n");
-            Console.ResetColor();
-            Console.WriteLine("\n[1] Water: $0.15 each     [2] Lemon: $0.20 each  [3] Ice: $0.05 per cube \n[4] Sugar: $0.10 per bag  [5] Cup: $0.05 each    [6] Done\n");
-            string buyItem = Console.ReadLine();
-            switch (buyItem)
+            Customer customer = new Customer();
+            customer.Randomize();
+            return customer;
+        }
+        public int GetCurrentDay()
+        {
+            return currentDay;
+        }
+        public void ChangeDay(Player player)
+        {
+            weatherForecast.RemoveAt(0);
+            currentDay++;
+            player.ResetMoneySpent();
+            if (currentDay == numberOfDays + 1)
             {
-                case "1":
-                    player.BuyingWater();
-                    break;
-                case "2":
-                    player.BuyingLemon();
-                    break;
-                case "3":
-                    player.BuyingIce();
-                    break;
-                case "4":
-                    player.BuyingSugar();
-                    break;
-                case "5":
-                    player.BuyingCup();
-                    break;
-                case "6":
-                    break;
-                default:
-                    Console.WriteLine("Please enter a correct choice");
-                    BuySupply();
-                    break;
+                mainMenu = false;
             }
         }
-
-        public void StartGame()
+        public void EndGame()
         {
-            while (day.firstDay < day.lastDay)
-            {
-                DisplayGameTitle();
-                day.days();
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("Day {0} of Lemonade Business", day.firstDay);
-                Console.ResetColor();
-                weather.randomWeatherWithTemperature();
-                PlayerMenu();
-                MakingLemonade();
-                SetLemonadePrice();
-                day.CustomerPerDay(weather, player, money, inventory);
-                Console.Clear();
-
-            }
-             day.firstDay++;
+            Console.WriteLine("Game over.");
+            Console.WriteLine("Press any key to exit.");
+            Console.ReadKey();
         }
-
-        public double MakingLemonade()
-
-        {
-
-            Console.WriteLine("\nType ---' Make '--- to make yummy lemonade \n");
-            string make = Console.ReadLine().ToLower();
-            if (make == "make")
-            {
-                if (inventory.water >= 1 && inventory.lemon >= 4 && inventory.sugar >= 2 && inventory.ice >= 8 && inventory.cup >= 10)
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("\n~~~~Lemonade Making In Progress~~~~\n");
-                    Console.ResetColor();
-                    Console.WriteLine("press enter to see freshly made lemonade! \n");
-                    Console.ReadLine();
-                    inventory.water = inventory.water - 1;
-                    inventory.lemon = inventory.lemon - 4;
-                    inventory.sugar = inventory.sugar - 2;
-                    inventory.ice = inventory.ice - 8;
-                    inventory.cup = inventory.cup - 10;
-                    inventory.numberOfFullLemonadeCup = inventory.numberOfFullLemonadeCup + 10;
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("You successfully made 1 pitcher of lemonade");
-                    Console.ResetColor();
-                    Console.WriteLine("You now have {0} lemonade fill cup \n", inventory.numberOfFullLemonadeCup);
-                    MakeMorePitcher();
-
-                }
-                else if (inventory.water < 1 || inventory.lemon < 4 || inventory.sugar < 2 || inventory.ice < 8 || inventory.cup < 5)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Sorry you don't have enough supplies to make a pitcher \n");
-                    Console.ResetColor();
-                    PlayerMenu();
-                }
-            }
-
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("{0} you need to make some lemonade before proceed on ", player.name);
-                Console.ResetColor();
-                Console.WriteLine("press enter to continue... \n");
-                Console.ReadKey();
-                MakingLemonade();
-            }
-            return inventory.numberOfFullLemonadeCup;
-        }
-        public void MakeMorePitcher()
-        {
-            Console.WriteLine("Do you wish to make more Pitcher? Yes | No \n");
-            string MakeMore = Console.ReadLine().ToLower();
-            if (MakeMore == "yes")
-            {
-                MakingLemonade();
-
-            }
-            else if (MakeMore == "no")
-            {
-                Console.WriteLine("Great Good luck on your sales! \n");
-            }
-            else
-            {
-                Console.WriteLine("You enter a invalid choices");
-                MakeMorePitcher();
-            }
-        }
-        public double SetLemonadePrice()
-        {
-            Console.WriteLine("Set a price for your lemonade ");
-            try
-            {
-                double price = Convert.ToDouble(Console.ReadLine());
-                money.PricePerLemonade = inventory.numberOfFullLemonadeCup * price;
-                Console.WriteLine("Your lemonade price is set to {0}", price);
-                Console.WriteLine("You current have {0} lemonade and if you sell all your lemonade you will make ${1}", inventory.numberOfFullLemonadeCup, money.PricePerLemonade);
-                Console.ReadLine();
-            }
-            catch (Exception e)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\nINVALID ENTRY! Enter a correct amount for your set price\n");
-                Console.ResetColor();
-                SetLemonadePrice();
-            }
-            return money.PricePerLemonade;
-        }
-
     }
 }
-
-
-

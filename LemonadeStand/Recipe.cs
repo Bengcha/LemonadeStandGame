@@ -6,30 +6,58 @@ using System.Threading.Tasks;
 
 namespace LemonadeStand
 {
-    class Recipe : iMixable
+     public class Recipe : iMixable
     {
         public double pitcher;
+        double mySupplyLemon;
+        double mySupplySugar;
+        double mySupplyIce;
 
         public void mixSupply()
         {
 
         }
-        public void supplyNeedToMakePitcher()
+        public void displayMakeRecipe()
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("\nYou will need 1 bottle of water, 4 lemon, 2 bag of sugar, 8 ice cube, and 10 cup to make one pitcher that hold 10 cups of Lemonade \n");
+            Console.WriteLine("Its time to setup your recipe for your Pitcher \n");
+            Console.WriteLine("One Pitcher can hold 10 cup of Lemonade");
             Console.ResetColor();
+            NewRecipe();
+            displayRecipe();
         }
 
-        //for (inventory.numberOfFullLemonadeCup + 10)
-        //{
-        //    inventory.water = inventory.water - 1;
-        //    inventory.lemon = inventory.lemon - 4;
-        //    inventory.sugar = inventory.sugar - 2;
-        //    inventory.ice = inventory.ice - 8;
-        //    inventory.cup = inventory.cup - 10;
+        public void NewRecipe()
+        {
+            CreateRecipe("Lemon");
+            CreateRecipe("Sugar");
+            CreateRecipe("Ice");
+        }
+        public void CreateRecipe(string supply)
+        {
+            Console.WriteLine("How many {0} do you want in a pitcher? \n", supply);
+            string NumberOfItem = Console.ReadLine();
+            double numberOfItem = Convert.ToDouble(NumberOfItem);
+            if (numberOfItem > 0)
+            {
+                mySupplyLemon = numberOfItem;
+                mySupplySugar = numberOfItem;
+                mySupplyIce = numberOfItem;
+                Console.WriteLine("Your recipe now contain {0} {1} \n", numberOfItem, supply);
+            }
+            else
+            {
+                Console.WriteLine("Please enter a valid amount");
+            }
+        }
+        public void displayRecipe()
+        {
+            Console.WriteLine("Your complete recipe: {0} Lemon, {1} Sugar bag, {2} Ice cubes \n", mySupplyLemon, mySupplySugar, mySupplyIce );
+        }
 
-        //}
+
+
+
 
     }
 }
