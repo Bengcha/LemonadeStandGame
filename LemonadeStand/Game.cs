@@ -207,6 +207,7 @@ namespace LemonadeStand
                         Console.Clear();
                         day.StartDay(inventory, player, this, weatherForecast[0]);
                         day.EndDay(this, player, inventory);
+
                         Console.ReadKey();
                         break;
                     case "2":

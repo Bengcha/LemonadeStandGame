@@ -12,15 +12,15 @@ namespace LemonadeStand
         public List<Ice> iceStorage;
         public List<Cup> cupStorage;
         public List<Sugar> sugarStorage;
+        public Dictionary<string, int> Storage;
         Random RandomStorage = new Random();
-        public Dictionary<string, int> Storage = new Dictionary<string, int>();
-
         public Inventory()
         {
             lemonStorage = new List<Lemon>();
             iceStorage = new List<Ice>();
             cupStorage = new List<Cup>();
             sugarStorage = new List<Sugar>();
+            Storage = new Dictionary<string, int>();
         }
 
         public void DisplayInventory()
@@ -31,6 +31,13 @@ namespace LemonadeStand
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("You have {0} lemon, {1} Sugar bags, {2} Cup, {3} Ice", lemonStorage.Count(), sugarStorage.Count(), cupStorage.Count(), iceStorage.Count());
             Console.ResetColor();
+        }
+        public void Reset()
+        {
+            ResetLemons();
+            ResetSugar();
+            ResetIce();
+            ResetCups();
         }
         public void AddLemon(Lemon lemon)
         {
@@ -107,18 +114,6 @@ namespace LemonadeStand
         public void ResetCups()
         {
             cupStorage.Clear();
-        }
-        public void Reset()
-        {
-            ResetLemons();
-            ResetSugar();
-            ResetIce();
-            ResetCups();
-        }
-        public void MeltIce()
-        {
-            Console.WriteLine("All your ice supplies have melted away.");
-            ResetIce();
         }
 
         public void AddIces(int amount)

@@ -61,10 +61,6 @@ namespace LemonadeStand
             {
                 inventory.RemoveIce();
             }
-            //for (int i = 0; i < player.recipe["cups"]; i++)
-            //{
-            //    inventory.RemoveCup();
-            //}
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("***~~~Lemonade Selling in process~~***");
             Console.ResetColor();
