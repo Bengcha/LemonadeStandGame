@@ -22,13 +22,12 @@ namespace LemonadeStand
             sugarStorage = new List<Sugar>();
             Storage = new Dictionary<string, int>();
         }
-
         public void DisplayInventory()
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("\nYour Current Supplies");
             Console.ResetColor();
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("You have {0} lemon, {1} Sugar bags, {2} Cup, {3} Ice", lemonStorage.Count(), sugarStorage.Count(), cupStorage.Count(), iceStorage.Count());
             Console.ResetColor();
         }
@@ -89,7 +88,6 @@ namespace LemonadeStand
         {
             return iceStorage.Count();
         }
-
         public void AddSugar(Sugar sugar)
         {
             sugarStorage.Add(sugar);
@@ -102,7 +100,6 @@ namespace LemonadeStand
         {
             iceStorage.Add(ice);
         }
-
         public void ResetIce()
         {
             iceStorage.Clear();
@@ -115,7 +112,6 @@ namespace LemonadeStand
         {
             cupStorage.Clear();
         }
-
         public void AddIces(int amount)
         {
             for (int i = 0; i < amount; i++)
@@ -140,7 +136,6 @@ namespace LemonadeStand
                 AddSugar(addSugar);
             }
         }
-
     }
 }
 

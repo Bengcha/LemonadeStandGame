@@ -12,34 +12,141 @@ namespace LemonadeStand
         public double cash;
         public Dictionary<string, int> recipe;
         public double price;
-        public double moneySpentToday;
-        public double moneyEarnedToday;
-        public double totalMoneySpent;
-        public double totalMoneyEarned;
-
+        public double cashAmountSpendToday;
+        public double cashAmountEarnToday;
+        public double totalCashSpent;
+        public double totalCashEarned;
+        public double finalCashBalance;
+        public string Name { get { return name; } set { name = value; } }
         public Player()
         {
             cash = 50;
-            price = .1;
+            price = .25;
             recipe = new Dictionary<string, int>();
             recipe.Add("lemons", 1);
             recipe.Add("sugar", 1);
             recipe.Add("ice", 1);
             recipe.Add("cups", 1);
-
-            moneyEarnedToday = moneySpentToday = totalMoneyEarned = totalMoneySpent = 0;
+            cashAmountEarnToday = 0;
+            cashAmountSpendToday = 0;
+            totalCashEarned = 0;
+            totalCashSpent = 0;
+            finalCashBalance = cash + totalCashEarned;
         }
-        public string Name
+        public void DisplayCash()
         {
-            get
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\nYour cashAmount balance: ${0}\n", cash);
+            Console.ResetColor();
+        }
+        public void DisplayRecipe()
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Your current Recipe: {0} Lemon, {1} Sugar cubes, {2} Ice Cube", recipe["lemons"], recipe["sugar"], recipe["ice"]);
+            Console.ResetColor();
+        }
+        public void DisplayPricePerLemonadeCup()
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Your default price per lemonade cup is ${0}", price);
+            Console.ResetColor();
+            PriceOption();
+        }
+        public void PriceOption()
+        {
+            Console.WriteLine("Do you wish to change your lemonade price? Y|N");
+            string priceChange = Console.ReadLine().ToLower();
+            if (priceChange == "yes" || priceChange == "y")
             {
-                return name;
+                GetChangePrice();
             }
-            set
+            else if (priceChange == "no" || priceChange == "n")
             {
-                
-                name = value;
-               
+                Console.WriteLine("Okay, your price remain the same");
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please choose a valid opitons");
+                PriceOption();
+            }
+        }
+        public void GetChangePrice()
+        {
+            double converted;
+            Console.WriteLine("\nEnter your new price.");
+            string newPrice = Console.ReadLine();
+            bool result = Double.TryParse(newPrice, out converted);
+
+            if (result)
+            {
+                if (converted > 0)
+                {
+                    Console.WriteLine("Your new price is ${0} per Lemonade cup", converted);
+                    price = converted;
+                }
+                else
+                {
+                    Console.WriteLine("Your new price must be higher than $0.00");
+                    GetChangePrice();
+                }
+            }
+            else
+            {
+                Console.WriteLine("You enter a invalid option. Make sure your price is higher than $0.00");
+                GetChangePrice();
+            }
+        }
+        public void ChangeRecipe()
+        {
+            ChangeItem("lemons");
+            ChangeItem("sugar");
+            ChangeItem("ice");
+        }
+        public void GetChangeRecipe()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine("Do you wish to change your Recipe? Y|N");
+            Console.ResetColor();
+            string change = Console.ReadLine().ToLower();
+            if (change == "y" || change == "yes")
+            {
+                ChangeRecipe();
+            }
+            else if (change == "n" || change == "no")
+            {
+                Console.WriteLine("No change to Recipe");
+            }
+            else
+            {
+                Console.WriteLine("Please choose a valid answer");
+                GetChangeRecipe();
+            }
+        }
+        public void ChangeItem(string item)
+        {
+            int converted;
+            Console.WriteLine("\nHow many {0} do you want to add to the pitcher recipe?\n", item);
+            string howMany = Console.ReadLine();
+            bool result = Int32.TryParse(howMany, out converted);
+            if (result)
+            {
+                if (converted >= 0)
+                {
+                    recipe[item] = converted;
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("Your new pitcher recipe now contain {0} {1}", converted, item);
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter number only");
+                    ChangeItem(item);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter number only");
+                ChangeItem(item);
             }
         }
         public double GetCash()
@@ -52,11 +159,11 @@ namespace LemonadeStand
         }
         public double GetTotalSpent()
         {
-            return totalMoneySpent;
+            return totalCashSpent;
         }
         public double GetTotalProfit()
         {
-            return totalMoneyEarned;
+            return totalCashEarned;
         }
         public void AdjustCash(double amount)
         {
@@ -64,129 +171,36 @@ namespace LemonadeStand
         }
         public void AdjustMoneySpentToday(double amount)
         {
-            moneySpentToday += amount;
+            cashAmountSpendToday += amount;
         }
         public void AdjustTotalMoneySpent(double amount)
         {
-            totalMoneySpent += amount;
+            totalCashSpent += amount;
         }
         public double GetPrice()
         {
             return price;
         }
-        public void DisplayCash()
-        {
-            Console.WriteLine("Your cash balance: ${0}.", cash);
-        }
         public void ResetMoneySpent()
         {
-            moneySpentToday = 0;
+            cashAmountSpendToday = 0;
         }
         public void SetTotalSpent(double amount)
         {
-            totalMoneySpent = amount;
+            totalCashSpent = amount;
         }
         public void SetTotalProfit(int amount)
         {
-            totalMoneyEarned = amount;
+            totalCashEarned = amount;
         }
         public double GetMoneySpentToday()
         {
-            return moneySpentToday;
+            return cashAmountSpendToday;
         }
-        public void DisplayRecipe()
-        {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.WriteLine("Your current Recipe: {0} Lemon, {1} Sugar cubes, {2} Ice Cube", recipe["lemons"], recipe["sugar"], recipe["ice"]);
-            Console.ResetColor();
-        }
-        public void GetChangeRecipe()
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Do you wish to change your Recipe? Y|N");
-            Console.ResetColor();
-            string change = Console.ReadLine().ToLower();
-            if (change == "y")
-            {
-                ChangeRecipe();
-            }
-            else if (change =="n")
-            {
-                Console.WriteLine("No change to Recipe");
-            }
-            else
-            {
-                Console.WriteLine("Please choose a valid answer");
-                GetChangeRecipe();
-            }
-        }
-        public void ChangeRecipe()
-        {
-            ChangeItem("lemons");
-            ChangeItem("sugar");
-            ChangeItem("ice");
-        }
+
         public void adjustTotalMoneySpent(double moneySpentToday)
         {
-            totalMoneySpent += moneySpentToday;
-        }
-        public void ChangeItem(string item)
-        {
-            int converted;
-            Console.WriteLine("How many {0} do you want to add to the pitcher recipe?", item);
-            string howMany = Console.ReadLine();
-            bool result = Int32.TryParse(howMany, out converted);
-            if (result)
-            {
-                if (converted >= 0)
-                {
-                    recipe[item] = converted;
-                    Console.WriteLine("Your pitcher recipe now contain {0} {1}", converted, item);
-                }
-                else
-                {
-                    Console.WriteLine("Please enter 0 or a positive number.");
-                    ChangeItem(item);
-                }
-            }
-            else
-            {
-                Console.WriteLine("Please enter 0 or a positive number.");
-                ChangeItem(item);
-            }
-        }
-        public void DisplayPrice()
-        {
-            Console.WriteLine("You currently charge ${0} for a cup of lemonade.", price);
-        }
-
-        public void GetChangePrice()
-        {
-            double converted;
-            Console.WriteLine("Enter your new price.");
-            string newPrice = Console.ReadLine();
-            bool result = Double.TryParse(newPrice, out converted);
-
-            if (result)
-            {
-                if (converted > 0)
-                {
-                    Console.WriteLine("You now charge ${0} for a cup of lemonade.", converted);
-                    price = converted;
-                }
-                else
-                {
-                    Console.WriteLine("Please enter a number higher than 0.");
-                    GetChangePrice();
-                }
-            }
-            else
-            {
-                Console.WriteLine("Please enter a number higher than 0.");
-                GetChangePrice();
-            }
-        }
-
+            totalCashSpent += moneySpentToday;
+        }      
     }
-
 }

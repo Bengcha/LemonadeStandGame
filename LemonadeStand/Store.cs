@@ -8,20 +8,21 @@ namespace LemonadeStand
 {
     class Store
     {
-        Dictionary<string, double> price = new Dictionary<string, double>();
+        Dictionary<string, double> price;
         bool buy;
         public Store()
         {
-            price.Add("lemons", .25);
+            price = new Dictionary<string, double>();
+            price.Add("lemons", .20);
             price.Add("sugar", .15);
-            price.Add("cups", .5);
-            price.Add("ice", .10);
+            price.Add("cups", .05);
+            price.Add("ice", .10);          
         }
         public bool Buy { get; set;}
         public void Purchase(Dictionary<string, int> storeInventory, Player player, Inventory inventory)
         {
             DisplayPrices();
-            DisplayCash(player.cash);
+            player.DisplayCash();
             GetBuyChoice(storeInventory, player, inventory);
         }
         public void DisplayPrices()
@@ -29,7 +30,7 @@ namespace LemonadeStand
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("***BLM FOOD MARKET***\n");
             Console.ResetColor();
-            Console.WriteLine("Price Information");
+            Console.WriteLine("PRICE INFORMATION");
             foreach (KeyValuePair<string, double> supply in price)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -37,18 +38,12 @@ namespace LemonadeStand
                 Console.ResetColor();
             }
         }
-        public void DisplayCash(double cash)
-        {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.WriteLine("\nYour current balance: ${0}.\n", cash);
-            Console.ResetColor();
-        }
         public void GetBuyChoice(Dictionary<string, int> storeInventory, Player player, Inventory inventory)
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("nWhat would you like to buy?");
-            Console.ResetColor();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine("What would you like to buy?");
+            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("[1] Lemon [2] Sugar [3] Cups [4] Ice [5] Exit");
             Console.ResetColor();
             string choice = Console.ReadLine().ToLower();
@@ -92,7 +87,7 @@ namespace LemonadeStand
                     double cost = (price[item] * converted);
                     if (cost <= player.cash)
                     {
-                        DisplayYouBought(item, converted);
+                        DisplaySupplyBought(item, converted);
                         player.AdjustCash(cost * -1);
                         player.AdjustMoneySpentToday(cost);
                         player.AdjustTotalMoneySpent(cost);
@@ -121,15 +116,14 @@ namespace LemonadeStand
                 }
                 else
                 {
-                    Console.WriteLine("Please enter a number greater than zero.");
+                    Console.WriteLine("Invalid input! Please try again!");
                 }
             }
             else
             {
-                Console.WriteLine("Please enter a number greater than zero.");
+                Console.WriteLine("Invalid input! please try again!");
             }
         }
-
         public void AmountToBuy(string item)
         {
             if (item == "lemons" || item == "cups")
@@ -141,7 +135,7 @@ namespace LemonadeStand
                 Console.WriteLine("\nHow many {0} cubes would you like to buy?", item);
             }
         }
-        public void DisplayYouBought(string item, int amountBought)
+        public void DisplaySupplyBought(string item, int amountBought)
         {
             if (item == "lemons" || item == "cups" || item == "trees")
             {
@@ -158,13 +152,17 @@ namespace LemonadeStand
         {
             if (item == "lemons" || item == "cups")
             {
-                Console.WriteLine("\nYou don't have enough cash to buy {0} {1}.", amount, item);
-                Console.WriteLine("Please check your cash balance");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\nYou don't have enough cashAmount to buy {0} {1}.", amount, item);
+                Console.WriteLine("Please check your cashAmount balance");
+                Console.ResetColor();
             }
             else if (item == "sugar" || item =="ice")
             {
-                Console.WriteLine("\nYou don't have enough cash to buy {0} {1} cubes.", amount, item);
-                Console.WriteLine("Please check your cash balance");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\nYou don't have enough cashAmount to buy {0} {1} cubes.", amount, item);
+                Console.WriteLine("Please check your cashAmount balance");
+                Console.ResetColor();
             }
         }
     }

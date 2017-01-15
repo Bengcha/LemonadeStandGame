@@ -18,11 +18,10 @@ namespace LemonadeStand
         {
             numberOfTimePeriods = 30;
         }
-
         public void StartDay(Inventory inventory, Player player, Game game, Weather weather)
         {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.WriteLine("!!~~~~Lemonade Bussiness in Progress~~~!!");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("!!~~~~Lemonade Bussiness in Progress~~~!!\n");
             Console.ResetColor();
             Console.ReadKey();
             bool businessIsInProcess = true;
@@ -31,15 +30,6 @@ namespace LemonadeStand
             int timePeriod = 1;
             Pitcher pitcher = new Pitcher(player);
             cashMakeFromSale = 0;
-            if (dayRandom.Next(0, 100) <= weather.GetRain())
-            {
-                isRaining = true;
-                Console.WriteLine("It is raining.");
-            }
-            else
-            {
-                isRaining = false;
-            }
             if (CheckRecipe(inventory, player) == true)
             {
                 pitcher.FillPitcher(inventory, player);
@@ -55,24 +45,50 @@ namespace LemonadeStand
             {
                 if (pitcher.GetFull() <= 10)
                 {
-                    if (CheckRecipe(inventory, player) == true)
+
+                    Console.WriteLine("You ran out of Lemonade juice!");
+                    Console.WriteLine("Do you want to check if you have enough supplies to make another pitcher?");
+                    string makeAnotherPitcher = Console.ReadLine().ToLower();
+                    if (makeAnotherPitcher == "yes" || makeAnotherPitcher == "y")
                     {
-                        pitcher.FillPitcher(inventory, player);
+                        if (CheckRecipe(inventory, player) && businessIsInProcess == true)
+                        {
+                            pitcher.FillPitcher(inventory, player);
+                        }
+                        else
+                        {
+                            Console.WriteLine("\nSorry but you don't have enough supplies to make another Pitcher");
+                        }
+                    }
+                    else if (makeAnotherPitcher == "no" || makeAnotherPitcher == "n")
+                    {
+                        Console.WriteLine("\n****Today Result****");
+                        Console.WriteLine("press any key to see today result");
                         Console.ReadKey();
+                        break;
                     }
                     else
                     {
-                        pitcherIsEmpty = true;
-                        businessIsInProcess = false;
-                        Console.WriteLine("You run out of Lemonade!, you can't sell any more");
+                        try
+                        {
+                            if (makeAnotherPitcher.Equals(""))
+                            {
+                                Console.WriteLine("Please choose a valid option");
+                            }
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Please choose a valid option");
+                        }
                     }
                 }
                 if (inventory.RetrieveCup() <= 0)
                 {
                     CupIsOut = true;
-                    Console.WriteLine("Oops! seem like you run out of cups. No more business for today.");
+                    Console.WriteLine("\nOops! seem like you run out of cups. No more business for today.");
                     businessIsInProcess = false;
                 }
+
                 if (!pitcherIsEmpty && !CupIsOut)
                 {
                     DisplayTime(timePeriod);
@@ -89,50 +105,54 @@ namespace LemonadeStand
                         }
                         isRaining = false;
                     }
-                    try
-                    {
-                        if (inventory.cupStorage.Count() >= 1)
-                        {
-                            CheckForCustomer(player, pitcher, inventory, weather);
-                        }
-                    }
-                    catch
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("\nThat was the last lemonade cup on the table!");
-                        Console.WriteLine("~~~*Checking inventory for more cups*~~~");
-                        Console.WriteLine("press any key to see if you have more cup\n");
-                        Console.ResetColor();
-                        Console.ReadKey();
-                    }
-                    
-                
-                
-                
-            
-        
-
                 }
+
+                try
+                {
+                    if (inventory.cupStorage.Count() >= 1)
+                    {
+                        CheckForCustomer(player, pitcher, inventory, weather);
+                    }
+                }
+                catch
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("\nThat was the last lemonade cup on the table!");
+                    Console.ResetColor();
+                    Console.WriteLine("\n~~~*Checking inventory for more cups*~~~");
+                    Console.WriteLine("press any key to see if you have more cup\n");
+                    Console.ReadKey();
+                }
+
                 timePeriod++;
-
-
             }
-            Console.WriteLine("Day {0} is OVER.", game.GetCurrentDay());
+            EndDayResult(game, player);
+        }
+        public void EndDayResult(Game game, Player player)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("\nDay {0} is OVER. \n", game.GetCurrentDay());
+            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("You spent ${0} on supplies today.", player.GetMoneySpentToday());
             Console.WriteLine("You make ${0} back from your sales today", cashMakeFromSale);
-            if (cashMakeFromSale - player.GetMoneySpentToday() >= 0)
+            if (cashMakeFromSale - player.GetMoneySpentToday() > 0)
             {
-                Console.WriteLine("Your profit today was {0}.", cashMakeFromSale - player.GetMoneySpentToday());
+                
+                Console.WriteLine("Congrats! You did good today. Your profit today was ${0}.", cashMakeFromSale - player.GetMoneySpentToday());
+                
             }
             else
             {
-                Console.WriteLine("Your loss today was {0}.", cashMakeFromSale - player.GetMoneySpentToday());
+                
+                Console.WriteLine("Your loss today is ${0}.", cashMakeFromSale - player.GetMoneySpentToday());
+                Console.ResetColor();
             }
         }
 
         public bool CheckRecipe(Inventory inventory, Player player)
         {
-            if (CheckLemons(inventory, player) && CheckSugar(inventory, player) && CheckIce(inventory, player) && CheckCup(inventory, player))
+            if (CheckLemonInventory(inventory, player) && CheckSugarInventory(inventory, player) && CheckIceInventory(inventory, player) && CheckCupInventory(inventory, player))
             {
                 return true;
             }
@@ -141,7 +161,7 @@ namespace LemonadeStand
                 return false;
             }
         }
-        public bool CheckLemons(Inventory inventory, Player player)
+        public bool CheckLemonInventory(Inventory inventory, Player player)
         {
             if (player.recipe["lemons"] <= inventory.lemonStorage.Count())
             {
@@ -149,12 +169,11 @@ namespace LemonadeStand
             }
             else
             {
-                Console.WriteLine("You don't have enough lemons to make a pitcher!");
-                return false;
-                
+                Console.WriteLine("You need to buy more lemon!");
+                return false;           
             }
         }
-        public bool CheckSugar(Inventory inventory, Player player)
+        public bool CheckSugarInventory(Inventory inventory, Player player)
         {
             if (player.recipe["sugar"] <= inventory.sugarStorage.Count())
             {
@@ -162,11 +181,11 @@ namespace LemonadeStand
             }
             else
             {
-                Console.WriteLine("You don't have enough sugar to make a pitcher!");
+                Console.WriteLine("You need to buy more sugar!");
                 return false;
             }
         }
-        public bool CheckIce(Inventory inventory, Player player)
+        public bool CheckIceInventory(Inventory inventory, Player player)
         {
             if (player.recipe["ice"] <= inventory.iceStorage.Count())
             {
@@ -174,11 +193,11 @@ namespace LemonadeStand
             }
             else
             {
-                Console.WriteLine("You don't have enough ice to make a pitcher!");
+                Console.WriteLine("You need to buy more ice!");
                 return false;
             }
         }
-        public bool CheckCup(Inventory inventory, Player player)
+        public bool CheckCupInventory(Inventory inventory, Player player)
         {
             if (player.recipe["cups"] <= inventory.cupStorage.Count() == true)
             {
@@ -186,30 +205,33 @@ namespace LemonadeStand
             }
             else
             {
-                Console.WriteLine("You don't have anymore cup to hold the lemonade!");
+                Console.WriteLine("\nThere no more cup left so you can't sell any more lemonade");
                 return false;
             }
         }
-
         public void CheckForCustomer(Player player, Pitcher pitcher, Inventory inventory, Weather weather)
         {
             int chance = dayRandom.Next(0, 100);
-            if (chance <= 90 && !isRaining)
+            if (chance <= 80 && !isRaining)
             {
                 Customer customer = new Customer();
                 customer.Randomize();
-                if (customer.WillBuy(player, weather, pitcher))
+                if (customer.WillPurchase(player, weather, pitcher))
                 {
                     BuyCup(player, pitcher, inventory);
-                    if (customer.DetermineIfCustomerWillBuyAgain(pitcher))
+                    if (customer.CheckingCustomerBuyingStatus(pitcher))
                     {
                         BuyCup(player, pitcher, inventory);
+                    }
+                    else
+                    {
+                        Console.WriteLine("No customer walk by...");
                     }
                 }
             }
             else
             {
-                Console.WriteLine("*No customer bought your lemonade*\n");
+                Console.WriteLine("*The rain is pouring hard so no customer stop to buy any lemonade!*\n");
             }
         }
         public void BuyCup(Player player, Pitcher pitcher, Inventory inventory)
@@ -218,10 +240,10 @@ namespace LemonadeStand
             pitcher.AdjustFull(-10);
             inventory.RemoveCup();
             cashMakeFromSale += player.GetPrice();
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("Yay! A customer just bought a cup of lemonade");
             Console.ResetColor();
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("You made ${0} and your pitcher of lemonade is {1}% left.\n", player.GetPrice(), pitcher.GetFull());
             Console.ResetColor();
         }
@@ -244,11 +266,13 @@ namespace LemonadeStand
             }
             if (minutes == 0)
             {
-                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine("Current time: {0}:00 {1}\n", hour, time);
+                Console.ResetColor();
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("Current time: {0}:{1} {2} \n", hour, minutes, time);
                 Console.ResetColor();
             }
@@ -258,13 +282,14 @@ namespace LemonadeStand
             IceMelted(inventory);
             game.ChangeDay(player);
         }
-
         public void IceMelted(Inventory inventory)
         {
             if (inventory.iceStorage.Count() >= 1)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Oh no! All Your ice have melted away!.");
                 inventory.ResetIce();
+                Console.ResetColor();
             }
             else
             {

@@ -8,27 +8,55 @@ namespace LemonadeStand
 {
     class Customer
     {
-        int thirst;
-        int cash;
-        int sweetness;
-        int sourness;
-        Random customerRandom = new Random();
+        Random customerRandom;
+        int thirstPercentage;
+        int cashAmount;
+        int sweetPercentage;
+        int sourPercentage;    
         public Customer()
         {
-            thirst = 0;
-            cash = 0;
-            sweetness = 0;
+            customerRandom = new Random();
+            thirstPercentage = 0;
+            cashAmount = 0;
+            sweetPercentage = 0;        
+        }
+        public int GetThirst()
+        {
+            return thirstPercentage;
+        }
+        public double GetCash()
+        {
+            return cashAmount;
         }
         public void Randomize()
         {
-            thirst = customerRandom.Next(0, 50);
-            sweetness = customerRandom.Next(0, 50);
-            sourness = customerRandom.Next(0, 50);
-            cash = customerRandom.Next(1, 10);
+            thirstPercentage = customerRandom.Next(0, 50);
+            sweetPercentage = customerRandom.Next(0, 50);
+            sourPercentage = customerRandom.Next(0, 50);
+            cashAmount = customerRandom.Next(1, 10);
         }
-        public bool WillBuy(Player player, Weather weather, Pitcher pitcher)
+        public bool CheckingCustomerBuyingStatus(Pitcher pitcher)
         {
-            double costThreshold = cash / 3;
+            if (pitcher.GetSweetness() == sweetPercentage || pitcher.GetSourness() == sourPercentage)
+            {
+                return true;
+            }
+            else if (Math.Abs(pitcher.GetSweetness() - sweetPercentage) <= 20)
+            {
+                return true;
+            }
+            else if (Math.Abs(pitcher.GetSourness() - sourPercentage) <= 20)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool WillPurchase(Player player, Weather weather, Pitcher pitcher)
+        {
+            double costThreshold = cashAmount / 3;
             double afterTemp = 1 + ((weather.GetTemperature() - 84.0) / 100.0);
             costThreshold = costThreshold * afterTemp;
             if (player.GetPrice() > costThreshold)
@@ -39,11 +67,11 @@ namespace LemonadeStand
             {
                 int buyRoll = customerRandom.Next(1, 100);
                 double cheapPrice = 1;
-                if (player.GetPrice() < cash / 6)
+                if (player.GetPrice() < cashAmount / 6)
                 {
-                    cheapPrice = 1 + (cash / 5);
+                    cheapPrice = 1 + (cashAmount / 5);
                 }
-                if (buyRoll <= (thirst * afterTemp * cheapPrice))
+                if (buyRoll <= (thirstPercentage * afterTemp * cheapPrice))
                 {
                     return true;
                 }
@@ -52,37 +80,8 @@ namespace LemonadeStand
                     return false;
                 }
             }
-
-        }
-        public int GetThirst()
-        {
-            return thirst;
-        }
-        public double GetCash()
-        {
-            return cash;
-        }
-
-        public bool DetermineIfCustomerWillBuyAgain(Pitcher pitcher)
-        {
-            if (pitcher.GetSweetness() == sweetness || pitcher.GetSourness() == sourness)
-            {
-                return true;
-            }
-            else if (Math.Abs(pitcher.GetSweetness() - sweetness) <= 25)
-            {
-                return true;
-            }
-            else if (Math.Abs(pitcher.GetSourness() - sourness) <= 25)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
     }
-
 }
+
 

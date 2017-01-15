@@ -19,7 +19,6 @@ namespace LemonadeStand
         Day day;
         Weather weather;
         bool mainMenu;
-
         public Game()
         {
             currentDay = 1;
@@ -32,7 +31,6 @@ namespace LemonadeStand
             weather = new Weather();
             mainMenu = true;
         }
-
         public void StartGame()
         {
             DisplayWelcomeMessage();
@@ -45,14 +43,12 @@ namespace LemonadeStand
             PlayerMenu();
             EndGame();
         }
-
         public void DisplayWelcomeMessage()
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Welcome to the Lemonade Stand Game \n");
             Console.ResetColor();
         }
-
         public void DisplayPlayOption()
         {
             Console.WriteLine("[1] Play Game \n[2] Quit Game");
@@ -75,7 +71,6 @@ namespace LemonadeStand
                 DisplayPlayOption();
             }
         }
-
         public void DisplayGameTitle()
         {
             Console.Clear();
@@ -89,7 +84,6 @@ namespace LemonadeStand
             Console.WriteLine("|************************************|");
             Console.ResetColor();
         }
-
         public void RuleOptions()
         {
             DisplayGameTitle();
@@ -118,16 +112,15 @@ namespace LemonadeStand
             Console.WriteLine("you want to play for. You can start buying supplies with the amount of cash you have.");
             Console.WriteLine("The supplies are lemon, ice, cup, and sugar. You have the options ");
             Console.WriteLine("to choose the amount of supplies you want to buy each day. The weathers ");
-            Console.WriteLine("conidition will greatly impact your sales and profit. To win the game you must");
-            Console.WriteLine("make profit, meaning your *Final $ Balance* should be greater than your starting balance.");
+            Console.WriteLine("conidition will greatly impact your sales and profit. To win the game your");
+            Console.WriteLine("final balance should be greater than your starting balance.");
             Console.ResetColor();
             Console.WriteLine("\npress enter to continue...");
             Console.ReadLine();
         }
-
         public void ChooseName()
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("What will your character name be?");
             Console.ResetColor();
             player.Name = Console.ReadLine().ToUpper();
@@ -139,15 +132,13 @@ namespace LemonadeStand
                 ChooseName();
             }
         }
-
         public void SetCurrentDay(int day)
         {
             currentDay = day;
         }
-
         public void GetDays()
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.Write("\nHello {0}! please enter the amount of days you wish to play \n", player.Name);
             Console.ResetColor();
             string playerDays = Console.ReadLine().ToUpper();
@@ -157,7 +148,7 @@ namespace LemonadeStand
             {
                 if (converted > 0)
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.ForegroundColor = ConsoleColor.DarkCyan;
                     numberOfDays = converted;
                     Console.WriteLine("\nGreat! You are set to play for {0} days.", converted);
                     Console.ResetColor();
@@ -186,19 +177,18 @@ namespace LemonadeStand
                 weatherForecast.Add(weather);
             }
         }
-
         public void PlayerMenu()
         {
             while (mainMenu)
             {
                 DisplayGameTitle();
-                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
                 Console.WriteLine("\n*************** DAY {0} ***************", currentDay);
                 Console.ResetColor();
                 weather.DisplayTodaysWeather(weatherForecast);
                 Console.WriteLine("\n{0} what would you like to do?", player.Name);
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine("[1] Start Day [2] Inventory [3] Purchase Supply [4] Cash Balance \n[5] Recipe    [6] Set Price [7] Quit ");
+                Console.WriteLine("[1] Start Day [2] Inventory [3] Store [4] Cash Balance \n[5] Recipe    [6] Set Price [7] Quit ");
                 string choice = Console.ReadLine().ToLower();
                 Console.ResetColor();
                 switch (choice)
@@ -228,8 +218,7 @@ namespace LemonadeStand
                         Console.ReadKey();
                         break;
                     case "6":
-                        player.DisplayPrice();
-                        player.GetChangePrice();
+                        player.DisplayPricePerLemonadeCup();
                         Console.ReadKey();
                         break;
                     case "7":
@@ -247,7 +236,6 @@ namespace LemonadeStand
                 }
             }
         }
-
         public Customer MakeCustomer()
         {
             Customer customer = new Customer();
@@ -270,9 +258,32 @@ namespace LemonadeStand
         }
         public void EndGame()
         {
-            Console.WriteLine("Game over.");
-            Console.WriteLine("Press any key to exit.");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("\nGame over.");
+            Console.ResetColor();
+            Console.WriteLine("You have completed all your business days");
+            Console.WriteLine("\npress any key to see your game result\n");
             Console.ReadKey();
+            if (player.cash > 50)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Congratulation! You Won!");
+                Console.WriteLine("Your starting balance was $50.00 and your ending balance was ${0}", player.cash);
+                Console.WriteLine("\nPress any key to exit game.");
+                Console.ResetColor();
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
+                Console.WriteLine("You Lost! Good luck next time");
+                Console.WriteLine("Your starting balance was $50.00 and your ending balance was ${0}", player.cash);
+                Console.WriteLine("\nPress any key to exit.");
+                Console.ResetColor();
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
         }
     }
 }

@@ -10,49 +10,44 @@ namespace LemonadeStand
     class Weather
     {
         int temperature;
-        int cloudiness;
-        int rainLevel;
-        Random weatherRandom = new Random();
+        int cloudPercentage;
+        int rainPercentage;
+        Random weatherRandom;
+        public Weather()
+        {
+            weatherRandom = new Random();
+        }
         public void RandomForecast()
         {
-            //Thread.Sleep(15);
             temperature = 60 + weatherRandom.Next(0, 16) + weatherRandom.Next(0, 16) + weatherRandom.Next(0, 16);
             Thread.Sleep(15);
-            cloudiness = weatherRandom.Next(0, 101);
-            //Thread.Sleep(15);
+            cloudPercentage = weatherRandom.Next(0, 101);
             int rainChance = weatherRandom.Next(1, 101);
             if (rainChance < 50)
             {
-                rainLevel = 0;
+                rainPercentage = 0;
             }
             else
             {
-                //Thread.Sleep(15);
-                rainLevel = weatherRandom.Next(0, 101);
+                rainPercentage = weatherRandom.Next(0, 101);
             }
         }
         public void DisplayTodaysWeather(List<Weather> weatherForecast)
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("\nToday Weather Forecast");
             Console.ResetColor();
             DisplayWeather(weatherForecast[0]);
         }
-        //public void WeatherReport(List<Weather> weatherForecast)
-        //{
-        //    for (int i = 0; i < 7; i++)
-        //    {
-        //        Console.WriteLine("\nDay {0}'s weather:", i + 1);
-        //        DisplayWeather(weatherForecast[i]);
-        //    }
-
-
-        //}
         public void DisplayWeather(Weather weather)
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Temperature: {0}° degree", weather.GetTemperature());
+            Console.ResetColor();
             Console.WriteLine("Cloudy: {0}%", weather.GetCloudiness());
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("Chance of Rain: {0}%", weather.GetRain());
+            Console.ResetColor();
         }
 
         public int GetTemperature()
@@ -61,11 +56,11 @@ namespace LemonadeStand
         }
         public int GetCloudiness()
         {
-            return cloudiness;
+            return cloudPercentage;
         }
         public int GetRain()
         {
-            return rainLevel;
+            return rainPercentage;
         }
     }
 }
