@@ -48,6 +48,7 @@
     <Compile Include="Day.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Ice.cs" />
+    <Compile Include="iFill.cs" />
     <Compile Include="Inventory.cs" />
     <Compile Include="Lemon.cs" />
     <Compile Include="Pitcher.cs" />

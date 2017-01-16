@@ -92,9 +92,11 @@ namespace LemonadeStand
             switch (choice)
             {
                 case "yes":
+                case "y":
                     DisplayRule();
                     break;
                 case "no":
+                case "n":
                     Console.WriteLine("\nOkay lets move forward. \n");
                     break;
                 default:
@@ -115,7 +117,7 @@ namespace LemonadeStand
             Console.WriteLine("conidition will greatly impact your sales and profit. To win the game your");
             Console.WriteLine("final balance should be greater than your starting balance.");
             Console.ResetColor();
-            Console.WriteLine("\npress enter to continue...");
+            Console.WriteLine("\npress enter to continue...\n");
             Console.ReadLine();
         }
         public void ChooseName()

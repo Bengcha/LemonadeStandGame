@@ -32,7 +32,7 @@ namespace LemonadeStand
             cashMakeFromSale = 0;
             if (CheckRecipe(inventory, player) == true)
             {
-                pitcher.FillPitcher(inventory, player);
+                pitcher.Fill(inventory, player);
             }
             else
             {
@@ -53,7 +53,7 @@ namespace LemonadeStand
                     {
                         if (CheckRecipe(inventory, player) && businessIsInProcess == true)
                         {
-                            pitcher.FillPitcher(inventory, player);
+                            pitcher.Fill(inventory, player);
                         }
                         else
                         {
@@ -136,20 +136,21 @@ namespace LemonadeStand
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("You spent ${0} on supplies today.", player.GetMoneySpentToday());
             Console.WriteLine("You make ${0} back from your sales today", cashMakeFromSale);
+            Console.ResetColor();
             if (cashMakeFromSale - player.GetMoneySpentToday() > 0)
             {
-                
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Congrats! You did good today. Your profit today was ${0}.", cashMakeFromSale - player.GetMoneySpentToday());
-                
+                Console.ResetColor(); 
             }
             else
             {
-                
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Your loss today is ${0}.", cashMakeFromSale - player.GetMoneySpentToday());
+                Console.ResetColor();
                 Console.ResetColor();
             }
         }
-
         public bool CheckRecipe(Inventory inventory, Player player)
         {
             if (CheckLemonInventory(inventory, player) && CheckSugarInventory(inventory, player) && CheckIceInventory(inventory, player) && CheckCupInventory(inventory, player))

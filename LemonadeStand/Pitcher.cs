@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace LemonadeStand
 {
-    class Pitcher
+    class Pitcher : iFill
     {
         int fullPitcher;
         int sweetLemonade;
         int sourLemonade;
-        public void FillPitcher(Inventory inventory, Player player)
+        public void Fill(Inventory inventory, Player player)
         {
             fullPitcher = 100;
             for (int i = 0; i < player.recipe["lemons"]; i++)

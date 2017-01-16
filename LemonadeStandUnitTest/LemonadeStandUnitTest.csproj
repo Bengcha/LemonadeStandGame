@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2C4A3AA5-6A9E-4A5F-A1FC-446E00344AA5}</ProjectGuid>
+    <ProjectGuid>{DAAF4AD3-A42C-4827-8365-44AE512FDA95}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LemonadeStandTest</RootNamespace>
-    <AssemblyName>LemonadeStandTest</AssemblyName>
+    <RootNamespace>LemonadeStandUnitTest</RootNamespace>
+    <AssemblyName>LemonadeStandUnitTest</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -52,12 +52,6 @@
   <ItemGroup>
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LemonadeStand\LemonadeStand.csproj">
-      <Project>{9ada54fa-b3ba-4f93-a9b8-f63a7ba2448f}</Project>
-      <Name>LemonadeStand</Name>
-    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

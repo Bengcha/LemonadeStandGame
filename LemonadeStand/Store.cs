@@ -140,11 +140,11 @@ namespace LemonadeStand
             if (item == "lemons" || item == "cups" || item == "trees")
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("\nYou have bought {0} {1}.", amountBought, item);
+                Console.WriteLine("\nYou have bought {0} {1}.\n", amountBought, item);
             }
             else if (item == "sugar" || item=="ice")
             {
-                Console.WriteLine("\nYou have bought {0} {1}cubes.", amountBought, item);
+                Console.WriteLine("\nYou have bought {0} {1}cubes.\n", amountBought, item);
                 Console.ResetColor();
             }
         }
