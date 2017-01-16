@@ -42,7 +42,10 @@ namespace LemonadeStand
         public void DisplayRecipe()
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Your current Recipe: {0} Lemon, {1} Sugar cubes, {2} Ice Cube", recipe["lemons"], recipe["sugar"], recipe["ice"]);
+            Console.WriteLine("Your current Lemonade Recipe Pitcher: {0} Lemon, {1} Sugar cubes, {2} Ice Cube", recipe["lemons"], recipe["sugar"], recipe["ice"]);
+            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Remember 1 Pitcher can hold 10 cups of Lemonade so make sure you have enough cups");
             Console.ResetColor();
         }
         public void DisplayPricePerLemonadeCup()
